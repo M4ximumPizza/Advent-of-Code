@@ -6,7 +6,7 @@ int compare(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
 }
 
-// Function to calculate the total distance
+// Function to calculate the total distance (Part 1)
 int calculate_total_distance(int *left, int *right, int size) {
     // Sort both lists
     qsort(left, size, sizeof(int), compare);
@@ -22,6 +22,26 @@ int calculate_total_distance(int *left, int *right, int size) {
     return total_distance;
 }
 
+// Function to calculate the similarity score (Part 2)
+int calculate_similarity_score(int *left, int *right, int left_size, int right_size) {
+    int similarity_score = 0;
+
+    // For each number in the left list
+    for (int i = 0; i < left_size; i++) {
+        int count = 0;
+        // Count how many times the current number appears in the right list
+        for (int j = 0; j < right_size; j++) {
+            if (left[i] == right[j]) {
+                count++;
+            }
+        }
+        // Update the similarity score
+        similarity_score += left[i] * count;
+    }
+
+    return similarity_score;
+}
+
 int main() {
     FILE *file = fopen("numbers", "r");
     if (!file) {
@@ -33,7 +53,7 @@ int main() {
     int left_size = 0, right_size = 0;
 
     // Read the two lists of numbers from the file
-    while (fscanf(file, "%d", &left[left_size]) != EOF && fscanf(file, "%d", &right[right_size]) != EOF) {
+    while (fscanf(file, "%d %d", &left[left_size], &right[right_size]) != EOF) {
         left_size++;
         right_size++;
     }
@@ -46,9 +66,13 @@ int main() {
         return 1;
     }
 
-    // Calculate and print the total distance
+    // Part 1: Calculate and print the total distance
     int total_distance = calculate_total_distance(left, right, left_size);
     printf("Total distance between the lists: %d\n", total_distance);
+
+    // Part 2: Calculate and print the similarity score
+    int similarity_score = calculate_similarity_score(left, right, left_size, right_size);
+    printf("Similarity score: %d\n", similarity_score);
 
     return 0;
 }
